@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    *,
+    *::after,
+    *::before {
+      padding: 0;
+      margin: 0;
+    }
+
+    #app {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #sam-mind-container {
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div id="sam-mind-container"></div>
+  </div>
+  <script type="module">
+    import SamMind from './sam-mind.js'
+    // console.log(SamMind)
+    const mind = new SamMind({
+      containerId: "sam-mind-container"
+    })
+  </script>
+</body>
+</html>
