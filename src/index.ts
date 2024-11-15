@@ -1,35 +1,57 @@
 import * as d3 from "d3";
-import { structureZoom } from "./viewOperations";
+import cursorImage from "./assets/default.png";
+import {
+  structureZoom,
+  handleMouseEnd,
+  handleMouseStart,
+  handleMouseMove,
+} from "./interaction";
+import { drawText } from "./draw";
+import { getTextWidthAndHeight } from "./node";
+
+export let container = null;
+export let containerWidth = null;
+export let containerHeight = null;
+export let svg = null;
+export let middleContainer = null;
 
 interface SamMindOption {
   containerId?: string;
+  map: unknown;
+  mainKey?: string;
 }
 
 export default class SamMind {
   constructor(option: SamMindOption) {
+    setCursorStyle(option.containerId);
     initMind(option.containerId);
   }
 }
 
+function setCursorStyle(containerId) {
+  const cursorArea = document.getElementById(containerId);
+  cursorArea.style.cursor = `url('${cursorImage}'), auto`;
+}
+
 function initMind(containerId: string) {
-  const container = document.getElementById(containerId);
-  let svgEle = null;
-  let zoom = structureZoom(svgEle);
-  const svg = d3
+  container = document.getElementById(containerId);
+  containerWidth = container.clientWidth;
+  containerHeight = container.clientHeight;
+  let zoom = structureZoom();
+  svg = d3
     .select(container)
     .append("svg")
     .attr("id", "sam-mind-svg")
-    .attr("width", container.clientWidth)
-    .attr("height", container.clientHeight)
+    .attr("width", containerWidth)
+    .attr("height", containerHeight)
     .attr("xmlns", "http://www.w3.org/2000/svg")
     .attr("xmlns:xlink", "http://www.w3.org/1999/xlink")
-    .attr("background", "#red")
-    .call(zoom);
-  svgEle = svg
-    .append("circle")
-    .attr("id", "test1")
-    .attr("cx", 350)
-    .attr("cy", 200)
-    .attr("r", 20)
-    .attr("fill", "pink");
+    .attr("fill", "red")
+    .call(zoom)
+    .on("mousedown", handleMouseStart)
+    .on("mousemove", handleMouseMove)
+    .on("mouseup", handleMouseEnd);
+  middleContainer = svg.append("g").attr("class", "map-outter-container");
+  getTextWidthAndHeight({ text: "middleContainer" });
+  drawText(middleContainer, "保持卡后来发觉");
 }

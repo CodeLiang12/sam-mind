@@ -30,9 +30,43 @@
   </div>
   <script type="module">
     import SamMind from './sam-mind.js'
-    // console.log(SamMind)
+    const nodeMap = {
+  "id": 1,
+  "title": "思维导图1",
+  "children": [
+    {
+      "id": 2,
+      "title": "思维导图2",
+      "children": [
+        {
+          "id": 3,
+          "title": "思维导图1",
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "思维导图4",
+      "children": [
+        {
+          "id": 5,
+          "title": "思维导图5",
+          "children": []
+        },
+        {
+          "id": 6,
+          "title": "思维导图6",
+          "children": []
+        }
+      ]
+    }
+  ]
+}
+
     const mind = new SamMind({
-      containerId: "sam-mind-container"
+      containerId: "sam-mind-container",
+      map: nodeMap
     })
   </script>
 </body>
