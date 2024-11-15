@@ -12,6 +12,7 @@ esbuild
     bundle: true,
     sourcemap: true,
     format: "esm",
+    loader: { ".png": "file" },
   })
   .then((ctx) => {
     console.log("Start dev~~");
