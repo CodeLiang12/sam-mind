@@ -259,14 +259,14 @@ function constant_default(x5) {
 }
 
 // node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/data.js
-function bindIndex(parent, group, enter, update, exit, data2) {
-  var i = 0, node, groupLength = group.length, dataLength = data2.length;
+function bindIndex(parent, group, enter, update, exit, data3) {
+  var i = 0, node, groupLength = group.length, dataLength = data3.length;
   for (; i < dataLength; ++i) {
     if (node = group[i]) {
-      node.__data__ = data2[i];
+      node.__data__ = data3[i];
       update[i] = node;
     } else {
-      enter[i] = new EnterNode(parent, data2[i]);
+      enter[i] = new EnterNode(parent, data3[i]);
     }
   }
   for (; i < groupLength; ++i) {
@@ -275,8 +275,8 @@ function bindIndex(parent, group, enter, update, exit, data2) {
     }
   }
 }
-function bindKey(parent, group, enter, update, exit, data2, key) {
-  var i, node, nodeByKeyValue = /* @__PURE__ */ new Map(), groupLength = group.length, dataLength = data2.length, keyValues = new Array(groupLength), keyValue;
+function bindKey(parent, group, enter, update, exit, data3, key) {
+  var i, node, nodeByKeyValue = /* @__PURE__ */ new Map(), groupLength = group.length, dataLength = data3.length, keyValues = new Array(groupLength), keyValue;
   for (i = 0; i < groupLength; ++i) {
     if (node = group[i]) {
       keyValues[i] = keyValue = key.call(node, node.__data__, i, group) + "";
@@ -288,13 +288,13 @@ function bindKey(parent, group, enter, update, exit, data2, key) {
     }
   }
   for (i = 0; i < dataLength; ++i) {
-    keyValue = key.call(parent, data2[i], i, data2) + "";
+    keyValue = key.call(parent, data3[i], i, data3) + "";
     if (node = nodeByKeyValue.get(keyValue)) {
       update[i] = node;
-      node.__data__ = data2[i];
+      node.__data__ = data3[i];
       nodeByKeyValue.delete(keyValue);
     } else {
-      enter[i] = new EnterNode(parent, data2[i]);
+      enter[i] = new EnterNode(parent, data3[i]);
     }
   }
   for (i = 0; i < groupLength; ++i) {
@@ -311,8 +311,8 @@ function data_default(value, key) {
   var bind = key ? bindKey : bindIndex, parents = this._parents, groups = this._groups;
   if (typeof value !== "function") value = constant_default(value);
   for (var m = groups.length, update = new Array(m), enter = new Array(m), exit = new Array(m), j = 0; j < m; ++j) {
-    var parent = parents[j], group = groups[j], groupLength = group.length, data2 = arraylike(value.call(parent, parent && parent.__data__, j, parents)), dataLength = data2.length, enterGroup = enter[j] = new Array(dataLength), updateGroup = update[j] = new Array(dataLength), exitGroup = exit[j] = new Array(groupLength);
-    bind(parent, group, enterGroup, updateGroup, exitGroup, data2, key);
+    var parent = parents[j], group = groups[j], groupLength = group.length, data3 = arraylike(value.call(parent, parent && parent.__data__, j, parents)), dataLength = data3.length, enterGroup = enter[j] = new Array(dataLength), updateGroup = update[j] = new Array(dataLength), exitGroup = exit[j] = new Array(groupLength);
+    bind(parent, group, enterGroup, updateGroup, exitGroup, data3, key);
     for (var i0 = 0, i1 = 0, previous, next2; i0 < dataLength; ++i0) {
       if (previous = enterGroup[i0]) {
         if (i0 >= i1) i1 = i0 + 1;
@@ -326,8 +326,8 @@ function data_default(value, key) {
   update._exit = exit;
   return update;
 }
-function arraylike(data2) {
-  return typeof data2 === "object" && "length" in data2 ? data2 : Array.from(data2);
+function arraylike(data3) {
+  return typeof data3 === "object" && "length" in data3 ? data3 : Array.from(data3);
 }
 
 // node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/exit.js
@@ -860,66 +860,6 @@ var selection_default = selection;
 // node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/select.js
 function select_default2(selector) {
   return typeof selector === "string" ? new Selection([[document.querySelector(selector)]], [document.documentElement]) : new Selection([[selector]], root);
-}
-
-// node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/sourceEvent.js
-function sourceEvent_default(event) {
-  let sourceEvent;
-  while (sourceEvent = event.sourceEvent) event = sourceEvent;
-  return event;
-}
-
-// node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/pointer.js
-function pointer_default(event, node) {
-  event = sourceEvent_default(event);
-  if (node === void 0) node = event.currentTarget;
-  if (node) {
-    var svg3 = node.ownerSVGElement || node;
-    if (svg3.createSVGPoint) {
-      var point2 = svg3.createSVGPoint();
-      point2.x = event.clientX, point2.y = event.clientY;
-      point2 = point2.matrixTransform(node.getScreenCTM().inverse());
-      return [point2.x, point2.y];
-    }
-    if (node.getBoundingClientRect) {
-      var rect = node.getBoundingClientRect();
-      return [event.clientX - rect.left - node.clientLeft, event.clientY - rect.top - node.clientTop];
-    }
-  }
-  return [event.pageX, event.pageY];
-}
-
-// node_modules/.pnpm/d3-drag@3.0.0/node_modules/d3-drag/src/noevent.js
-var nonpassivecapture = { capture: true, passive: false };
-function noevent_default(event) {
-  event.preventDefault();
-  event.stopImmediatePropagation();
-}
-
-// node_modules/.pnpm/d3-drag@3.0.0/node_modules/d3-drag/src/nodrag.js
-function nodrag_default(view) {
-  var root3 = view.document.documentElement, selection2 = select_default2(view).on("dragstart.drag", noevent_default, nonpassivecapture);
-  if ("onselectstart" in root3) {
-    selection2.on("selectstart.drag", noevent_default, nonpassivecapture);
-  } else {
-    root3.__noselect = root3.style.MozUserSelect;
-    root3.style.MozUserSelect = "none";
-  }
-}
-function yesdrag(view, noclick) {
-  var root3 = view.document.documentElement, selection2 = select_default2(view).on("dragstart.drag", null);
-  if (noclick) {
-    selection2.on("click.drag", noevent_default, nonpassivecapture);
-    setTimeout(function() {
-      selection2.on("click.drag", null);
-    }, 0);
-  }
-  if ("onselectstart" in root3) {
-    selection2.on("selectstart.drag", null);
-  } else {
-    root3.style.MozUserSelect = root3.__noselect;
-    delete root3.__noselect;
-  }
 }
 
 // node_modules/.pnpm/d3-color@3.1.0/node_modules/d3-color/src/define.js
@@ -1500,51 +1440,6 @@ function interpolateTransform(parse, pxComma, pxParen, degParen) {
 }
 var interpolateTransformCss = interpolateTransform(parseCss, "px, ", "px)", "deg)");
 var interpolateTransformSvg = interpolateTransform(parseSvg, ", ", ")", ")");
-
-// node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/zoom.js
-var epsilon2 = 1e-12;
-function cosh(x5) {
-  return ((x5 = Math.exp(x5)) + 1 / x5) / 2;
-}
-function sinh(x5) {
-  return ((x5 = Math.exp(x5)) - 1 / x5) / 2;
-}
-function tanh(x5) {
-  return ((x5 = Math.exp(2 * x5)) - 1) / (x5 + 1);
-}
-var zoom_default = function zoomRho(rho, rho2, rho4) {
-  function zoom(p0, p1) {
-    var ux0 = p0[0], uy0 = p0[1], w0 = p0[2], ux1 = p1[0], uy1 = p1[1], w1 = p1[2], dx2 = ux1 - ux0, dy2 = uy1 - uy0, d2 = dx2 * dx2 + dy2 * dy2, i, S;
-    if (d2 < epsilon2) {
-      S = Math.log(w1 / w0) / rho;
-      i = function(t) {
-        return [
-          ux0 + t * dx2,
-          uy0 + t * dy2,
-          w0 * Math.exp(rho * t * S)
-        ];
-      };
-    } else {
-      var d1 = Math.sqrt(d2), b0 = (w1 * w1 - w0 * w0 + rho4 * d2) / (2 * w0 * rho2 * d1), b1 = (w1 * w1 - w0 * w0 - rho4 * d2) / (2 * w1 * rho2 * d1), r0 = Math.log(Math.sqrt(b0 * b0 + 1) - b0), r1 = Math.log(Math.sqrt(b1 * b1 + 1) - b1);
-      S = (r1 - r0) / rho;
-      i = function(t) {
-        var s = t * S, coshr0 = cosh(r0), u = w0 / (rho2 * d1) * (coshr0 * tanh(rho * s + r0) - sinh(r0));
-        return [
-          ux0 + u * dx2,
-          uy0 + u * dy2,
-          w0 * coshr0 / cosh(rho * s + r0)
-        ];
-      };
-    }
-    i.duration = S * 1e3 * rho / Math.SQRT2;
-    return i;
-  }
-  zoom.rho = function(_) {
-    var _1 = Math.max(1e-3, +_), _2 = _1 * _1, _4 = _2 * _2;
-    return zoomRho(_1, _2, _4);
-  };
-  return zoom;
-}(Math.SQRT2, 2, 4);
 
 // node_modules/.pnpm/d3-timer@3.0.1/node_modules/d3-timer/src/timer.js
 var frame = 0;
@@ -2392,25 +2287,6 @@ function type(t) {
   return { type: t };
 }
 
-// node_modules/.pnpm/d3-zoom@3.0.0/node_modules/d3-zoom/src/constant.js
-var constant_default4 = (x5) => () => x5;
-
-// node_modules/.pnpm/d3-zoom@3.0.0/node_modules/d3-zoom/src/event.js
-function ZoomEvent(type2, {
-  sourceEvent,
-  target,
-  transform: transform3,
-  dispatch: dispatch3
-}) {
-  Object.defineProperties(this, {
-    type: { value: type2, enumerable: true, configurable: true },
-    sourceEvent: { value: sourceEvent, enumerable: true, configurable: true },
-    target: { value: target, enumerable: true, configurable: true },
-    transform: { value: transform3, enumerable: true, configurable: true },
-    _: { value: dispatch3 }
-  });
-}
-
 // node_modules/.pnpm/d3-zoom@3.0.0/node_modules/d3-zoom/src/transform.js
 function Transform(k, x5, y5) {
   this.k = k;
@@ -2458,361 +2334,6 @@ transform.prototype = Transform.prototype;
 function transform(node) {
   while (!node.__zoom) if (!(node = node.parentNode)) return identity2;
   return node.__zoom;
-}
-
-// node_modules/.pnpm/d3-zoom@3.0.0/node_modules/d3-zoom/src/noevent.js
-function nopropagation2(event) {
-  event.stopImmediatePropagation();
-}
-function noevent_default3(event) {
-  event.preventDefault();
-  event.stopImmediatePropagation();
-}
-
-// node_modules/.pnpm/d3-zoom@3.0.0/node_modules/d3-zoom/src/zoom.js
-function defaultFilter(event) {
-  return (!event.ctrlKey || event.type === "wheel") && !event.button;
-}
-function defaultExtent() {
-  var e = this;
-  if (e instanceof SVGElement) {
-    e = e.ownerSVGElement || e;
-    if (e.hasAttribute("viewBox")) {
-      e = e.viewBox.baseVal;
-      return [[e.x, e.y], [e.x + e.width, e.y + e.height]];
-    }
-    return [[0, 0], [e.width.baseVal.value, e.height.baseVal.value]];
-  }
-  return [[0, 0], [e.clientWidth, e.clientHeight]];
-}
-function defaultTransform() {
-  return this.__zoom || identity2;
-}
-function defaultWheelDelta(event) {
-  return -event.deltaY * (event.deltaMode === 1 ? 0.05 : event.deltaMode ? 1 : 2e-3) * (event.ctrlKey ? 10 : 1);
-}
-function defaultTouchable() {
-  return navigator.maxTouchPoints || "ontouchstart" in this;
-}
-function defaultConstrain(transform3, extent, translateExtent) {
-  var dx0 = transform3.invertX(extent[0][0]) - translateExtent[0][0], dx1 = transform3.invertX(extent[1][0]) - translateExtent[1][0], dy0 = transform3.invertY(extent[0][1]) - translateExtent[0][1], dy1 = transform3.invertY(extent[1][1]) - translateExtent[1][1];
-  return transform3.translate(
-    dx1 > dx0 ? (dx0 + dx1) / 2 : Math.min(0, dx0) || Math.max(0, dx1),
-    dy1 > dy0 ? (dy0 + dy1) / 2 : Math.min(0, dy0) || Math.max(0, dy1)
-  );
-}
-function zoom_default2() {
-  var filter3 = defaultFilter, extent = defaultExtent, constrain = defaultConstrain, wheelDelta = defaultWheelDelta, touchable = defaultTouchable, scaleExtent = [0, Infinity], translateExtent = [[-Infinity, -Infinity], [Infinity, Infinity]], duration = 250, interpolate = zoom_default, listeners = dispatch_default("start", "zoom", "end"), touchstarting, touchfirst, touchending, touchDelay = 500, wheelDelay = 150, clickDistance2 = 0, tapDistance = 10;
-  function zoom(selection2) {
-    selection2.property("__zoom", defaultTransform).on("wheel.zoom", wheeled, { passive: false }).on("mousedown.zoom", mousedowned).on("dblclick.zoom", dblclicked).filter(touchable).on("touchstart.zoom", touchstarted).on("touchmove.zoom", touchmoved).on("touchend.zoom touchcancel.zoom", touchended).style("-webkit-tap-highlight-color", "rgba(0,0,0,0)");
-  }
-  zoom.transform = function(collection, transform3, point2, event) {
-    var selection2 = collection.selection ? collection.selection() : collection;
-    selection2.property("__zoom", defaultTransform);
-    if (collection !== selection2) {
-      schedule(collection, transform3, point2, event);
-    } else {
-      selection2.interrupt().each(function() {
-        gesture(this, arguments).event(event).start().zoom(null, typeof transform3 === "function" ? transform3.apply(this, arguments) : transform3).end();
-      });
-    }
-  };
-  zoom.scaleBy = function(selection2, k, p, event) {
-    zoom.scaleTo(selection2, function() {
-      var k0 = this.__zoom.k, k1 = typeof k === "function" ? k.apply(this, arguments) : k;
-      return k0 * k1;
-    }, p, event);
-  };
-  zoom.scaleTo = function(selection2, k, p, event) {
-    zoom.transform(selection2, function() {
-      var e = extent.apply(this, arguments), t0 = this.__zoom, p0 = p == null ? centroid(e) : typeof p === "function" ? p.apply(this, arguments) : p, p1 = t0.invert(p0), k1 = typeof k === "function" ? k.apply(this, arguments) : k;
-      return constrain(translate(scale(t0, k1), p0, p1), e, translateExtent);
-    }, p, event);
-  };
-  zoom.translateBy = function(selection2, x5, y5, event) {
-    zoom.transform(selection2, function() {
-      return constrain(this.__zoom.translate(
-        typeof x5 === "function" ? x5.apply(this, arguments) : x5,
-        typeof y5 === "function" ? y5.apply(this, arguments) : y5
-      ), extent.apply(this, arguments), translateExtent);
-    }, null, event);
-  };
-  zoom.translateTo = function(selection2, x5, y5, p, event) {
-    zoom.transform(selection2, function() {
-      var e = extent.apply(this, arguments), t = this.__zoom, p0 = p == null ? centroid(e) : typeof p === "function" ? p.apply(this, arguments) : p;
-      return constrain(identity2.translate(p0[0], p0[1]).scale(t.k).translate(
-        typeof x5 === "function" ? -x5.apply(this, arguments) : -x5,
-        typeof y5 === "function" ? -y5.apply(this, arguments) : -y5
-      ), e, translateExtent);
-    }, p, event);
-  };
-  function scale(transform3, k) {
-    k = Math.max(scaleExtent[0], Math.min(scaleExtent[1], k));
-    return k === transform3.k ? transform3 : new Transform(k, transform3.x, transform3.y);
-  }
-  function translate(transform3, p0, p1) {
-    var x5 = p0[0] - p1[0] * transform3.k, y5 = p0[1] - p1[1] * transform3.k;
-    return x5 === transform3.x && y5 === transform3.y ? transform3 : new Transform(transform3.k, x5, y5);
-  }
-  function centroid(extent2) {
-    return [(+extent2[0][0] + +extent2[1][0]) / 2, (+extent2[0][1] + +extent2[1][1]) / 2];
-  }
-  function schedule(transition2, transform3, point2, event) {
-    transition2.on("start.zoom", function() {
-      gesture(this, arguments).event(event).start();
-    }).on("interrupt.zoom end.zoom", function() {
-      gesture(this, arguments).event(event).end();
-    }).tween("zoom", function() {
-      var that = this, args = arguments, g = gesture(that, args).event(event), e = extent.apply(that, args), p = point2 == null ? centroid(e) : typeof point2 === "function" ? point2.apply(that, args) : point2, w = Math.max(e[1][0] - e[0][0], e[1][1] - e[0][1]), a = that.__zoom, b = typeof transform3 === "function" ? transform3.apply(that, args) : transform3, i = interpolate(a.invert(p).concat(w / a.k), b.invert(p).concat(w / b.k));
-      return function(t) {
-        if (t === 1) t = b;
-        else {
-          var l = i(t), k = w / l[2];
-          t = new Transform(k, p[0] - l[0] * k, p[1] - l[1] * k);
-        }
-        g.zoom(null, t);
-      };
-    });
-  }
-  function gesture(that, args, clean) {
-    return !clean && that.__zooming || new Gesture(that, args);
-  }
-  function Gesture(that, args) {
-    this.that = that;
-    this.args = args;
-    this.active = 0;
-    this.sourceEvent = null;
-    this.extent = extent.apply(that, args);
-    this.taps = 0;
-  }
-  Gesture.prototype = {
-    event: function(event) {
-      if (event) this.sourceEvent = event;
-      return this;
-    },
-    start: function() {
-      if (++this.active === 1) {
-        this.that.__zooming = this;
-        this.emit("start");
-      }
-      return this;
-    },
-    zoom: function(key, transform3) {
-      if (this.mouse && key !== "mouse") this.mouse[1] = transform3.invert(this.mouse[0]);
-      if (this.touch0 && key !== "touch") this.touch0[1] = transform3.invert(this.touch0[0]);
-      if (this.touch1 && key !== "touch") this.touch1[1] = transform3.invert(this.touch1[0]);
-      this.that.__zoom = transform3;
-      this.emit("zoom");
-      return this;
-    },
-    end: function() {
-      if (--this.active === 0) {
-        delete this.that.__zooming;
-        this.emit("end");
-      }
-      return this;
-    },
-    emit: function(type2) {
-      var d = select_default2(this.that).datum();
-      listeners.call(
-        type2,
-        this.that,
-        new ZoomEvent(type2, {
-          sourceEvent: this.sourceEvent,
-          target: zoom,
-          type: type2,
-          transform: this.that.__zoom,
-          dispatch: listeners
-        }),
-        d
-      );
-    }
-  };
-  function wheeled(event, ...args) {
-    if (!filter3.apply(this, arguments)) return;
-    var g = gesture(this, args).event(event), t = this.__zoom, k = Math.max(scaleExtent[0], Math.min(scaleExtent[1], t.k * Math.pow(2, wheelDelta.apply(this, arguments)))), p = pointer_default(event);
-    if (g.wheel) {
-      if (g.mouse[0][0] !== p[0] || g.mouse[0][1] !== p[1]) {
-        g.mouse[1] = t.invert(g.mouse[0] = p);
-      }
-      clearTimeout(g.wheel);
-    } else if (t.k === k) return;
-    else {
-      g.mouse = [p, t.invert(p)];
-      interrupt_default(this);
-      g.start();
-    }
-    noevent_default3(event);
-    g.wheel = setTimeout(wheelidled, wheelDelay);
-    g.zoom("mouse", constrain(translate(scale(t, k), g.mouse[0], g.mouse[1]), g.extent, translateExtent));
-    function wheelidled() {
-      g.wheel = null;
-      g.end();
-    }
-  }
-  function mousedowned(event, ...args) {
-    if (touchending || !filter3.apply(this, arguments)) return;
-    var currentTarget = event.currentTarget, g = gesture(this, args, true).event(event), v = select_default2(event.view).on("mousemove.zoom", mousemoved, true).on("mouseup.zoom", mouseupped, true), p = pointer_default(event, currentTarget), x0 = event.clientX, y0 = event.clientY;
-    nodrag_default(event.view);
-    nopropagation2(event);
-    g.mouse = [p, this.__zoom.invert(p)];
-    interrupt_default(this);
-    g.start();
-    function mousemoved(event2) {
-      noevent_default3(event2);
-      if (!g.moved) {
-        var dx2 = event2.clientX - x0, dy2 = event2.clientY - y0;
-        g.moved = dx2 * dx2 + dy2 * dy2 > clickDistance2;
-      }
-      g.event(event2).zoom("mouse", constrain(translate(g.that.__zoom, g.mouse[0] = pointer_default(event2, currentTarget), g.mouse[1]), g.extent, translateExtent));
-    }
-    function mouseupped(event2) {
-      v.on("mousemove.zoom mouseup.zoom", null);
-      yesdrag(event2.view, g.moved);
-      noevent_default3(event2);
-      g.event(event2).end();
-    }
-  }
-  function dblclicked(event, ...args) {
-    if (!filter3.apply(this, arguments)) return;
-    var t0 = this.__zoom, p0 = pointer_default(event.changedTouches ? event.changedTouches[0] : event, this), p1 = t0.invert(p0), k1 = t0.k * (event.shiftKey ? 0.5 : 2), t1 = constrain(translate(scale(t0, k1), p0, p1), extent.apply(this, args), translateExtent);
-    noevent_default3(event);
-    if (duration > 0) select_default2(this).transition().duration(duration).call(schedule, t1, p0, event);
-    else select_default2(this).call(zoom.transform, t1, p0, event);
-  }
-  function touchstarted(event, ...args) {
-    if (!filter3.apply(this, arguments)) return;
-    var touches = event.touches, n = touches.length, g = gesture(this, args, event.changedTouches.length === n).event(event), started, i, t, p;
-    nopropagation2(event);
-    for (i = 0; i < n; ++i) {
-      t = touches[i], p = pointer_default(t, this);
-      p = [p, this.__zoom.invert(p), t.identifier];
-      if (!g.touch0) g.touch0 = p, started = true, g.taps = 1 + !!touchstarting;
-      else if (!g.touch1 && g.touch0[2] !== p[2]) g.touch1 = p, g.taps = 0;
-    }
-    if (touchstarting) touchstarting = clearTimeout(touchstarting);
-    if (started) {
-      if (g.taps < 2) touchfirst = p[0], touchstarting = setTimeout(function() {
-        touchstarting = null;
-      }, touchDelay);
-      interrupt_default(this);
-      g.start();
-    }
-  }
-  function touchmoved(event, ...args) {
-    if (!this.__zooming) return;
-    var g = gesture(this, args).event(event), touches = event.changedTouches, n = touches.length, i, t, p, l;
-    noevent_default3(event);
-    for (i = 0; i < n; ++i) {
-      t = touches[i], p = pointer_default(t, this);
-      if (g.touch0 && g.touch0[2] === t.identifier) g.touch0[0] = p;
-      else if (g.touch1 && g.touch1[2] === t.identifier) g.touch1[0] = p;
-    }
-    t = g.that.__zoom;
-    if (g.touch1) {
-      var p0 = g.touch0[0], l0 = g.touch0[1], p1 = g.touch1[0], l1 = g.touch1[1], dp = (dp = p1[0] - p0[0]) * dp + (dp = p1[1] - p0[1]) * dp, dl = (dl = l1[0] - l0[0]) * dl + (dl = l1[1] - l0[1]) * dl;
-      t = scale(t, Math.sqrt(dp / dl));
-      p = [(p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2];
-      l = [(l0[0] + l1[0]) / 2, (l0[1] + l1[1]) / 2];
-    } else if (g.touch0) p = g.touch0[0], l = g.touch0[1];
-    else return;
-    g.zoom("touch", constrain(translate(t, p, l), g.extent, translateExtent));
-  }
-  function touchended(event, ...args) {
-    if (!this.__zooming) return;
-    var g = gesture(this, args).event(event), touches = event.changedTouches, n = touches.length, i, t;
-    nopropagation2(event);
-    if (touchending) clearTimeout(touchending);
-    touchending = setTimeout(function() {
-      touchending = null;
-    }, touchDelay);
-    for (i = 0; i < n; ++i) {
-      t = touches[i];
-      if (g.touch0 && g.touch0[2] === t.identifier) delete g.touch0;
-      else if (g.touch1 && g.touch1[2] === t.identifier) delete g.touch1;
-    }
-    if (g.touch1 && !g.touch0) g.touch0 = g.touch1, delete g.touch1;
-    if (g.touch0) g.touch0[1] = this.__zoom.invert(g.touch0[0]);
-    else {
-      g.end();
-      if (g.taps === 2) {
-        t = pointer_default(t, this);
-        if (Math.hypot(touchfirst[0] - t[0], touchfirst[1] - t[1]) < tapDistance) {
-          var p = select_default2(this).on("dblclick.zoom");
-          if (p) p.apply(this, arguments);
-        }
-      }
-    }
-  }
-  zoom.wheelDelta = function(_) {
-    return arguments.length ? (wheelDelta = typeof _ === "function" ? _ : constant_default4(+_), zoom) : wheelDelta;
-  };
-  zoom.filter = function(_) {
-    return arguments.length ? (filter3 = typeof _ === "function" ? _ : constant_default4(!!_), zoom) : filter3;
-  };
-  zoom.touchable = function(_) {
-    return arguments.length ? (touchable = typeof _ === "function" ? _ : constant_default4(!!_), zoom) : touchable;
-  };
-  zoom.extent = function(_) {
-    return arguments.length ? (extent = typeof _ === "function" ? _ : constant_default4([[+_[0][0], +_[0][1]], [+_[1][0], +_[1][1]]]), zoom) : extent;
-  };
-  zoom.scaleExtent = function(_) {
-    return arguments.length ? (scaleExtent[0] = +_[0], scaleExtent[1] = +_[1], zoom) : [scaleExtent[0], scaleExtent[1]];
-  };
-  zoom.translateExtent = function(_) {
-    return arguments.length ? (translateExtent[0][0] = +_[0][0], translateExtent[1][0] = +_[1][0], translateExtent[0][1] = +_[0][1], translateExtent[1][1] = +_[1][1], zoom) : [[translateExtent[0][0], translateExtent[0][1]], [translateExtent[1][0], translateExtent[1][1]]];
-  };
-  zoom.constrain = function(_) {
-    return arguments.length ? (constrain = _, zoom) : constrain;
-  };
-  zoom.duration = function(_) {
-    return arguments.length ? (duration = +_, zoom) : duration;
-  };
-  zoom.interpolate = function(_) {
-    return arguments.length ? (interpolate = _, zoom) : interpolate;
-  };
-  zoom.on = function() {
-    var value = listeners.on.apply(listeners, arguments);
-    return value === listeners ? zoom : value;
-  };
-  zoom.clickDistance = function(_) {
-    return arguments.length ? (clickDistance2 = (_ = +_) * _, zoom) : Math.sqrt(clickDistance2);
-  };
-  zoom.tapDistance = function(_) {
-    return arguments.length ? (tapDistance = +_, zoom) : tapDistance;
-  };
-  return zoom;
-}
-
-// src/assets/default.png
-var default_default = "./default-DCTRS5AG.png";
-
-// src/interaction.ts
-var domainStart = null;
-var scalingFactor = 100;
-function structureZoom() {
-  const zoom = zoom_default2().scaleExtent([0.1, 10]).filter((event) => event.ctrlKey && event.buttons <= 1).wheelDelta((event) => -event.deltaY * (event.deltaMode ? 120 : 1) / 500).on("zoom", (event) => {
-    middleContainer && middleContainer.attr("transform", () => event.transform);
-    scalingFactor = Math.round(event.transform.k * 100);
-    console.log(scalingFactor);
-  });
-  return zoom;
-}
-function handleMouseStart(event) {
-  if (event.buttons <= 1) {
-    domainStart = { x: event.x, y: event.y };
-    console.log(domainStart);
-  }
-}
-function handleMouseMove(event) {
-  if (domainStart) {
-    console.log(event);
-  }
-}
-function handleMouseEnd(event) {
-  if (event.buttons <= 1) {
-    domainStart = null;
-  }
 }
 
 // node_modules/.pnpm/@svgdotjs+svg.js@3.2.4/node_modules/@svgdotjs/svg.js/src/utils/methods.js
@@ -2913,8 +2434,8 @@ function getOrigin(o, element) {
 }
 var descriptiveElements = /* @__PURE__ */ new Set(["desc", "metadata", "title"]);
 var isDescriptive = (element) => descriptiveElements.has(element.nodeName);
-var writeDataToDom = (element, data2, defaults = {}) => {
-  const cloned = { ...data2 };
+var writeDataToDom = (element, data3, defaults = {}) => {
+  const cloned = { ...data3 };
   for (const key in cloned) {
     if (cloned[key].valueOf() === defaults[key]) {
       delete cloned[key];
@@ -3235,11 +2756,11 @@ function data(a, v, r) {
       )
     );
   } else if (a instanceof Array) {
-    const data2 = {};
+    const data3 = {};
     for (const key of a) {
-      data2[key] = this.data(key);
+      data3[key] = this.data(key);
     }
-    return data2;
+    return data3;
   } else if (typeof a === "object") {
     for (v in a) {
       this.data(v, a[v]);
@@ -4302,13 +3823,13 @@ function off(node, events, listener, options) {
     }
   });
 }
-function dispatch2(node, event, data2, options) {
+function dispatch2(node, event, data3, options) {
   const n = getEventTarget(node);
   if (event instanceof globals.window.Event) {
     n.dispatchEvent(event);
   } else {
     event = new globals.window.CustomEvent(event, {
-      detail: data2,
+      detail: data3,
       cancelable: true,
       ...options
     });
@@ -4321,8 +3842,8 @@ function dispatch2(node, event, data2, options) {
 var EventTarget = class extends Base {
   addEventListener() {
   }
-  dispatch(event, data2, options) {
-    return dispatch2(this, event, data2, options);
+  dispatch(event, data3, options) {
+    return dispatch2(this, event, data3, options);
   }
   dispatchEvent(event) {
     const bag = this.getEventHolder().events;
@@ -4336,8 +3857,8 @@ var EventTarget = class extends Base {
     return !event.defaultPrevented;
   }
   // Fire given event
-  fire(event, data2, options) {
-    this.dispatch(event, data2, options);
+  fire(event, data3, options) {
+    this.dispatch(event, data3, options);
     return this;
   }
   getEventHolder() {
@@ -8367,36 +7888,48 @@ registerMorphableType([
 ]);
 makeMorphable();
 
-// src/node.ts
-function getTextWidthAndHeight({
-  text,
-  fontSize = "16px",
-  fontWeight = "normal",
-  fontFamily = "\u5FAE\u8F6F\u96C5\u9ED1, 'Microsoft YaHei'"
-}) {
-  if (!text)
-    return {
-      width: 0,
-      height: 0
-    };
-  const textNode = new Text().text(text).font({
-    size: fontSize,
-    weight: fontWeight,
-    family: fontFamily
+// src/draw.ts
+function drawNode(container2, nodeData) {
+  const data3 = getWidthAndHeight(nodeData);
+  const nodeContainer = container2.append("g").attr("class", "node-container").attr("transform", `translate(100, 100)`);
+  const foreignObject = nodeContainer.append("foreignObject").attr("width", Math.round(data3.width) + 20).attr("height", Math.round(data3.height) + 20).attr("x", 20).attr("y", 20).attr("fill", "pink");
+  const div = foreignObject.append("xhtml:div").attr("xmlns", "http://www.w3.org/1999/xhtml").text(nodeData.title).style("width", "calc(100% - 20px)").style("height", "100%").style("line-height", Math.round(data3.height) + 20 + "px").style("padding", "0 10px").style("font-weight", nodeData.fontWeight).style("font-family", nodeData.fontFamily).style("font-size", nodeData.fontSize).style("color", "red");
+  setTimeout(() => {
+    drawContainer(nodeContainer, drawNode);
+  }, 0);
+}
+function getWidthAndHeight(data3) {
+  if (!data3.title) {
+    return { width: 0, height: 0 };
+  }
+  const node = new Text().text(data3.title).font({
+    size: data3.fontSize || "16px",
+    weight: data3.fontWeight || "normal",
+    family: data3.fontFamily || "\u5FAE\u8F6F\u96C5\u9ED1, 'Microsoft YaHei'"
   });
-  const { width: width4, height: height4 } = textNode.bbox();
+  const { width: width4, height: height4 } = node.bbox();
   return {
     width: width4,
     height: height4
   };
 }
-
-// src/draw.ts
-function drawText(container2, data2) {
-  const rect = getTextWidthAndHeight({ text: data2 });
-  const enter = container2.append("g");
-  enter.append("rect").attr("x", 100).attr("y", 100).attr("width", rect.width + 100).attr("height", rect.height + 100).attr("fill", "pink");
-  enter.append("foreignObject").attr("class", "x-mind-node-text").attr("width", rect.width + 20).attr("height", rect.height + 20).attr("x", 150).attr("y", 150).append("xhtml:p").attr("xmlns", "http://www.w3.org/1999/xhtml").text(data2).style("color", "black").style("font-size", "16px");
+function drawContainer(container2, nodeData) {
+  const rect = container2.node().getBoundingClientRect();
+  const offset = nodeData.offset || 20;
+  const borderRadius = nodeData.borderRadius || 10;
+  const pathData = `
+  M ${offset}, ${offset / 2}
+  h ${rect.width + offset - borderRadius * 2}
+  a ${borderRadius},${borderRadius} 0 0 1 ${borderRadius},${borderRadius}
+  v ${rect.height + offset - borderRadius * 2}
+  a ${borderRadius},${borderRadius} 0 0 1 -${borderRadius},${borderRadius}
+  h -${rect.width + offset - borderRadius * 2}
+  a ${borderRadius},${borderRadius} 0 0 1 -${borderRadius},-${borderRadius}
+  v -${rect.height + offset - borderRadius * 2}
+  a ${borderRadius},${borderRadius} 0 0 1 ${borderRadius},-${borderRadius}
+  z
+`;
+  container2.append("path").attr("d", pathData).attr("fill", "none").attr("stroke", "blue").attr("stroke-width", 2);
 }
 
 // src/index.ts
@@ -8413,17 +7946,21 @@ var SamMind = class {
 };
 function setCursorStyle(containerId) {
   const cursorArea = document.getElementById(containerId);
-  cursorArea.style.cursor = `url('${default_default}'), auto`;
 }
+var data2 = {
+  width: 0,
+  height: 0,
+  fontWeight: "bolder",
+  fontSize: "22px",
+  title: "\u4FDD\u6301\u5361\u540E\u6765\u53D1\u89C9"
+};
 function initMind(containerId) {
   container = document.getElementById(containerId);
   containerWidth = container.clientWidth;
   containerHeight = container.clientHeight;
-  let zoom = structureZoom();
-  svg2 = select_default2(container).append("svg").attr("id", "sam-mind-svg").attr("width", containerWidth).attr("height", containerHeight).attr("xmlns", "http://www.w3.org/2000/svg").attr("xmlns:xlink", "http://www.w3.org/1999/xlink").attr("fill", "red").call(zoom).on("mousedown", handleMouseStart).on("mousemove", handleMouseMove).on("mouseup", handleMouseEnd);
+  svg2 = select_default2(container).append("svg").attr("id", "sam-mind-svg").attr("width", containerWidth).attr("height", containerHeight).attr("xmlns", "http://www.w3.org/2000/svg").attr("xmlns:xlink", "http://www.w3.org/1999/xlink");
   middleContainer = svg2.append("g").attr("class", "map-outter-container");
-  getTextWidthAndHeight({ text: "middleContainer" });
-  drawText(middleContainer, "\u4FDD\u6301\u5361\u540E\u6765\u53D1\u89C9");
+  drawNode(middleContainer, data2);
 }
 export {
   container,
